@@ -11,7 +11,7 @@ lazy val root = (project in file("."))
       "dev.zio"                       %% "zio-logging"              % "0.5.7",
       "dev.zio"                       %% "zio-logging-slf4j-bridge" % "0.5.7",
       "io.github.vigoo"               %% "clipp-zio"                % "0.5.0",
-      "com.coralogix"                 %% "zio-k8s-client"           % "0.6.0",
+      "com.coralogix"                 %% "zio-k8s-client"           % "0.6.1",
       "com.softwaremill.sttp.client3" %% "httpclient-backend-zio"   % "3.1.7",
       "com.softwaremill.sttp.client3" %% "slf4j-backend"            % "3.1.7",
       "io.circe"                      %% "circe-yaml"               % "0.13.1",
@@ -36,10 +36,15 @@ lazy val root = (project in file("."))
       "--install-exit-handlers",
       "-H:+ReportExceptionStackTraces",
       "-H:+AllowVMInspection",
+      "-H:EnableURLProtocols=http,https",
+      "--enable-all-security-services",
+      "-H:+JNI",
       "-H:JNIConfigurationFiles=../../src/native-image-configs/jni-config.json",
       "-H:ReflectionConfigurationFiles=../../src/native-image-configs/reflect-config.json",
       "-H:DynamicProxyConfigurationFiles=../../src/native-image-configs/proxy-config.json",
       "-H:ResourceConfigurationFiles=../../src/native-image-configs/resource-config.json"
-    )
+    ),
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := "com.ziverge.kubectlplugin"
   )
-  .enablePlugins(NativeImagePlugin)
+  .enablePlugins(NativeImagePlugin, BuildInfoPlugin)
